@@ -1,0 +1,86 @@
+<div class="catalog-page">
+  <section class="catalog-search" aria-label="Movie search">
+    <div class="catalog-search-container">
+      <form class="catalog-search-form" id="catalog-search-form">
+        <div class="catalog-search-field">
+          <label class="visually-hidden" for="movie-query">
+            Search for a movie
+          </label>
+
+          <input
+            class="catalog-search-input"
+            id="movie-query"
+            name="query"
+            type="search"
+            placeholder="Search for a movie"
+            autocomplete="off"
+          />
+
+          <button
+            class="catalog-search-clear is-hidden"
+            type="button"
+            aria-label="Clear search"
+          >
+            X
+          </button>
+        </div>
+
+        <label class="visually-hidden" for="movie-year">Year</label>
+
+        <select class="catalog-search-year" id="movie-year" name="year">
+          <option value="">Year</option>
+        </select>
+
+        <button
+          class="catalog-search-submit"
+          type="submit"
+          aria-label="Search movies"
+        ></button>
+      </form>
+    </div>
+  </section>
+
+  <section class="catalog-results" aria-live="polite" aria-busy="false">
+    <div class="catalog-results-container">
+      <ul class="movie-list"></ul>
+      <template id="catalog-movie-card-template">
+        <li class="movie-list-item">
+          <article class="movie-card">
+            <img class="movie-card-image" src="" alt="" />
+
+            <div class="movie-card-content">
+              <h2 class="movie-card-title"></h2>
+
+              <p class="movie-card-meta">
+                <span class="movie-card-genres"></span>
+                <span class="movie-card-year"></span>
+              </p>
+
+              <p class="movie-card-rating">
+                <span class="movie-card-rating-value"></span>
+              </p>
+            </div>
+          </article>
+        </li>
+      </template>
+
+      <div class="catalog-results-empty" hidden>
+        <p>OOPS...</p>
+        <p>We are very sorry!</p>
+        <p>We don't have any results matching your search.</p>
+      </div>
+
+      <nav class="pagination" aria-label="Catalog pages" hidden>
+        <ul class="pagination-list"></ul>
+      </nav>
+    </div>
+  </section>
+
+  <div class="loader is-hidden" role="status" aria-live="polite">
+    <span class="visually-hidden">Loading movies</span>
+  </div>
+
+  <button class="scroll-up is-hidden" type="button" aria-label="Scroll to top">
+    Up
+  </button>
+</div>
