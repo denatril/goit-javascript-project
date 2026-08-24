@@ -70,6 +70,11 @@
   color: var(--catalog-text-secondary);
 }
 
+.catalog-search-input::-webkit-search-cancel-button,
+.catalog-search-input::-webkit-search-decoration {
+  appearance: none;
+}
+
 .catalog-search-year {
   padding: 0 var(--catalog-space-2);
 }
@@ -107,6 +112,30 @@
 
 .catalog-search-clear.is-hidden {
   display: none;
+}
+
+.catalog-page .scroll-up {
+  position: fixed;
+  right: var(--catalog-space-5);
+  bottom: var(--catalog-space-5);
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--catalog-border);
+  border-radius: 50%;
+  background-color: var(--catalog-accent);
+  color: var(--catalog-bg);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--catalog-transition),
+    opacity var(--catalog-transition);
+}
+
+.catalog-page .scroll-up:hover,
+.catalog-page .scroll-up:focus-visible {
+  background-color: var(--catalog-accent-hover);
 }
 
 .catalog-results {
