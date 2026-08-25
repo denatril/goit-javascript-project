@@ -1,0 +1,119 @@
+.hero {
+    position: relative;
+    min-height: 560px;
+    display: flex;
+    align-items: flex-end;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+.hero__overlay {
+    width: 100%;
+    min-height: 560px;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.6) 45%,
+            rgba(0, 0, 0, 0.15) 100%);
+}
+
+.hero__container {
+    width: 100%;
+    padding-top: 120px;
+    padding-bottom: 70px;
+}
+
+.hero__content {
+    max-width: 560px;
+}
+
+.hero__rating {
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.hero__rating-value {
+    display: inline-block;
+}
+
+.hero__title {
+    margin: 0 0 16px;
+    font-size: 52px;
+    line-height: 1.05;
+    font-weight: 700;
+}
+
+.hero__description {
+    margin: 0 0 28px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hero__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hero__button {
+    min-width: 140px;
+    min-height: 44px;
+    padding: 10px 22px;
+    border: 0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hero__button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.hero__button--trailer {
+    background-color: #ff6b08;
+    color: #ffffff;
+}
+
+.hero__button--details {
+    background-color: #ffffff;
+    color: #111111;
+}
+
+@media screen and (max-width: 767px) {
+    .hero {
+        min-height: 520px;
+    }
+
+    .hero__overlay {
+        min-height: 520px;
+    }
+
+    .hero__container {
+        padding-top: 100px;
+        padding-bottom: 48px;
+    }
+
+    .hero__content {
+        max-width: 100%;
+    }
+
+    .hero__title {
+        font-size: 36px;
+    }
+
+    .hero__description {
+        font-size: 16px;
+    }
+
+    .hero__button {
+        width: 100%;
+    }
+}
