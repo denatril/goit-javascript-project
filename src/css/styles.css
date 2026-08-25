@@ -13,8 +13,8 @@
 /* Sections style */
 @import url("./header.css");
 @import url("./hero.css");
-@import url("./modal-window.css");
+@import url("./modal.css");
 @import url("./footer.css");
 @import url("./home.css");
 @import url("./catalog.css");
-@import url("./my-library.css");
+@import url("./library.css");
