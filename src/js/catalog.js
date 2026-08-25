@@ -83,6 +83,37 @@ function renderMovieList(movies) {
   setEmptyState(movies.length === 0);
 }
 
+function renderPagination(currentPage, totalPages) {
+  clearPagination();
+
+  if (totalPages <= 1) {
+    return;
+  }
+
+  const pages = [];
+
+  for (let page = 1; page <= totalPages; page += 1) {
+    const isActive = page === currentPage;
+
+    pages.push(`
+      <li>
+        <button
+          class="pagination-button${isActive ? ' is-active' : ''}"
+          type="button"
+          data-page="${page}"
+          aria-label="Go to page ${page}"
+          ${isActive ? 'aria-current="page"' : ''}
+        >
+          ${page}
+        </button>
+      </li>
+    `);
+  }
+
+  catalogRefs.paginationList.innerHTML = pages.join('');
+  catalogRefs.pagination.hidden = false;
+}
+
 function updateClearButtonVisibility() {
   const hasQuery = catalogRefs.queryInput.value.trim() !== '';
 
@@ -108,10 +139,27 @@ function handleSearchSubmit(event) {
   setEmptyState(false);
 }
 
+function handlePaginationClick(event) {
+  const pageButton = event.target.closest('.pagination-button');
+
+  if (!pageButton) {
+    return;
+  }
+
+  const nextPage = Number(pageButton.dataset.page);
+
+  if (nextPage === catalogState.page) {
+    return;
+  }
+
+  catalogState.page = nextPage;
+}
+
 populateYearSelect();
 catalogRefs.queryInput.addEventListener('input', updateClearButtonVisibility);
 catalogRefs.clearButton.addEventListener('click', handleClearSearch);
 catalogRefs.form.addEventListener('submit', handleSearchSubmit);
+catalogRefs.paginationList.addEventListener('click', handlePaginationClick);
 
 function updateScrollUpVisibility() {
   const shouldShowScrollUp = window.scrollY > 300;
