@@ -63,6 +63,13 @@ async function searchMovies({ query, year, page = 1 }) {
   });
 }
 
+async function fetchTrendingMovies(page = 1) {
+  return fetchTmdb('/trending/movie/day', {
+    page,
+    language: 'en-US',
+  });
+}
+
 async function fetchMovieGenres() {
   const data = await fetchTmdb('/genre/movie/list', {
     language: 'en-US',
@@ -228,11 +235,42 @@ function updateClearButtonVisibility() {
   catalogRefs.clearButton.classList.toggle('is-hidden', !hasQuery);
 }
 
-function handleClearSearch() {
+async function handleClearSearch() {
   catalogRefs.queryInput.value = '';
   catalogRefs.queryInput.focus();
 
   updateClearButtonVisibility();
+
+  catalogState.query = '';
+  catalogState.year = '';
+  catalogState.page = 1;
+  catalogRefs.yearSelect.value = '';
+
+  try {
+    setLoadingState(true);
+    clearMovieList();
+    clearPagination();
+
+    const data = await fetchTrendingMovies(catalogState.page);
+    renderCatalogResponse(data);
+  } catch (error) {
+    clearMovieList();
+    clearPagination();
+    setEmptyState(true);
+  } finally {
+    setLoadingState(false);
+  }
+}
+
+function renderCatalogResponse(data) {
+  const movies = data.results.map(normalizeMovie);
+
+  catalogState.movies = movies;
+  catalogState.totalPages = data.total_pages;
+
+  renderMovieList(movies);
+  renderPagination(catalogState.page, catalogState.totalPages);
+  setEmptyState(movies.length === 0);
 }
 
 async function handleSearchSubmit(event) {
@@ -242,32 +280,21 @@ async function handleSearchSubmit(event) {
   catalogState.year = catalogRefs.yearSelect.value;
   catalogState.page = 1;
 
-  if (!catalogState.query) {
-    clearMovieList();
-    clearPagination();
-    setEmptyState(true);
-    return;
-  }
-
   try {
     setLoadingState(true);
     clearMovieList();
     clearPagination();
     setEmptyState(false);
 
-    const data = await searchMovies({
-      query: catalogState.query,
-      year: catalogState.year,
-      page: catalogState.page,
-    });
+    const data = catalogState.query
+      ? await searchMovies({
+          query: catalogState.query,
+          year: catalogState.year,
+          page: catalogState.page,
+        })
+      : await fetchTrendingMovies(catalogState.page);
 
-    const movies = data.results.map(normalizeMovie);
-
-    catalogState.movies = movies;
-    catalogState.totalPages = data.total_pages;
-
-    renderMovieList(movies);
-    renderPagination(catalogState.page, catalogState.totalPages);
+    renderCatalogResponse(data);
   } catch (error) {
     clearMovieList();
     clearPagination();
@@ -293,20 +320,16 @@ async function handlePaginationClick(event) {
   try {
     setLoadingState(true);
 
-    const data = await searchMovies({
-      query: catalogState.query,
-      year: catalogState.year,
-      page: nextPage,
-    });
-
-    const movies = data.results.map(normalizeMovie);
+    const data = catalogState.query
+      ? await searchMovies({
+          query: catalogState.query,
+          year: catalogState.year,
+          page: nextPage,
+        })
+      : await fetchTrendingMovies(nextPage);
 
     catalogState.page = nextPage;
-    catalogState.movies = movies;
-    catalogState.totalPages = data.total_pages;
-
-    renderMovieList(movies);
-    renderPagination(catalogState.page, catalogState.totalPages);
+    renderCatalogResponse(data);
 
     catalogRefs.resultsSection.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
@@ -320,9 +343,21 @@ async function initCatalogPage() {
   populateYearSelect();
 
   try {
-    await fetchMovieGenres();
+    setLoadingState(true);
+    try {
+      await fetchMovieGenres();
+    } catch (error) {
+      catalogState.genres = [];
+    }
+
+    const data = await fetchTrendingMovies(catalogState.page);
+    renderCatalogResponse(data);
   } catch (error) {
-    catalogState.genres = [];
+    clearMovieList();
+    clearPagination();
+    setEmptyState(true);
+  } finally {
+    setLoadingState(false);
   }
 }
 
