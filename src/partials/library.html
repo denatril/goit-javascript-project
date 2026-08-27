@@ -20,4 +20,26 @@
       <button class="library-load-more" type="button" hidden>Load more</button>
     </div>
   </section>
+
+  <button class="scroll-up is-hidden" type="button" aria-label="Scroll to top">
+    <svg class="scroll-up-icon" width="20" height="20">
+      <use href="img/sprite.svg#icon-arrow-up"></use>
+    </svg>
+  </button>
+
+  <template id="library-movie-card-template">
+    <li class="library-movie-card">
+      <img class="library-movie-card-image" src="" alt="" loading="lazy" />
+      <div class="library-movie-card-content">
+        <h2 class="library-movie-card-title"></h2>
+        <p class="library-movie-card-meta">
+          <span class="library-movie-card-genres"></span>
+          <span class="library-movie-card-year"></span>
+        </p>
+        <p class="library-movie-card-rating">
+          <span class="library-movie-card-rating-value"></span>
+        </p>
+      </div>
+    </li>
+  </template>
 </div>

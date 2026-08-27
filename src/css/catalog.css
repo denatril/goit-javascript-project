@@ -87,15 +87,16 @@
 }
 
 .catalog-search-submit {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 0;
+  border: 1px solid var(--catalog-search-button-border);
   border-radius: 50%;
-  background-color: var(--catalog-accent);
-  color: var(--catalog-bg);
+  background-color: var(--catalog-search-button-bg);
+  color: var(--catalog-button-icon);
   font-size: 0;
   cursor: pointer;
   transition: background-color var(--catalog-transition);
@@ -103,7 +104,14 @@
 
 .catalog-search-submit:hover,
 .catalog-search-submit:focus-visible {
-  background-color: var(--catalog-accent-hover);
+  background-color: var(--catalog-search-button-bg-hover);
+}
+
+.catalog-search-submit-icon {
+  display: block;
+  width: 35px;
+  height: 25px;
+  fill: currentColor;
 }
 
 .catalog-search-input:focus-visible,
@@ -138,9 +146,10 @@
   border: 1px solid var(--catalog-border);
   border-radius: 50%;
   background-color: var(--catalog-accent);
-  color: var(--catalog-bg);
-  font-size: 12px;
-  font-weight: 500;
+  color: var(--catalog-scroll-up-icon);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
   transition:
     background-color var(--catalog-transition),
@@ -150,6 +159,13 @@
 .catalog-page .scroll-up:hover,
 .catalog-page .scroll-up:focus-visible {
   background-color: var(--catalog-accent-hover);
+}
+
+.catalog-page .scroll-up-icon {
+  display: block;
+  width: 26px;
+  height: 25px;
+  fill: currentColor;
 }
 
 .catalog-results {
@@ -166,9 +182,40 @@
 }
 
 .catalog-page .movie-card {
+  position: relative;
   overflow: hidden;
   border-radius: var(--catalog-radius-md);
   background-color: var(--catalog-bg);
+}
+
+.catalog-page .movie-card.is-missing-poster {
+  aspect-ratio: 2 / 3;
+  background-color: var(--catalog-poster-fallback-bg);
+}
+
+.catalog-page .movie-card::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 38%;
+  background: var(--catalog-card-overlay);
+  content: '';
+  pointer-events: none;
+}
+
+.catalog-page .movie-card.is-missing-poster::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: calc(100% - 32px);
+  color: var(--catalog-text-secondary);
+  font-size: 16px;
+  line-height: 1.3;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  content: 'No poster';
 }
 
 .catalog-page .movie-card-image {
@@ -178,16 +225,24 @@
   object-fit: cover;
 }
 
+.catalog-page .movie-card-image[hidden] {
+  display: none;
+}
+
 .catalog-page .movie-card-content {
+  position: absolute;
+  right: var(--catalog-space-3);
+  bottom: var(--catalog-space-3);
+  left: var(--catalog-space-3);
+  z-index: 1;
   display: grid;
   gap: var(--catalog-space-1);
-  padding: var(--catalog-space-1) 0 0;
 }
 
 .catalog-page .movie-card-title {
   margin: 0;
   color: var(--catalog-text-primary);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.25;
   text-transform: uppercase;
@@ -200,23 +255,49 @@
   gap: var(--catalog-space-1);
   margin: 0;
   color: var(--catalog-text-secondary);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.25;
 }
 
 .catalog-page .movie-card-rating {
+  position: absolute;
+  right: 0;
+  bottom: 0;
   margin: 0;
 }
 
 .catalog-page .movie-card-rating-value {
   display: inline-flex;
-  padding: 2px 6px;
-  border-radius: var(--catalog-radius-sm);
-  background-color: var(--catalog-accent);
-  color: var(--catalog-bg);
-  font-size: 10px;
+  background-color: transparent;
+  color: var(--catalog-accent);
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+.catalog-page .loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 30;
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--catalog-loader-track);
+  border-top-color: var(--catalog-accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: catalog-loader-spin 800ms linear infinite;
+}
+
+@keyframes catalog-loader-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 .catalog-page .catalog-results-empty {
   max-width: 420px;

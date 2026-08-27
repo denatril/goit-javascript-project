@@ -64,7 +64,7 @@ async function searchMovies({ query, year, page = 1 }) {
 }
 
 async function fetchTrendingMovies(page = 1) {
-  return fetchTmdb('/trending/movie/day', {
+  return fetchTmdb('/trending/movie/week', {
     page,
     language: 'en-US',
   });
@@ -104,6 +104,19 @@ function normalizeMovie(movie) {
     year: getMovieYear(movie.release_date),
     rating: movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A',
   };
+}
+
+function getMovieRatingStars(rating) {
+  const numericRating = Number(rating);
+
+  if (Number.isNaN(numericRating)) {
+    return 'N/A';
+  }
+
+  const activeStars = Math.max(0, Math.min(5, Math.round(numericRating / 2)));
+  const inactiveStars = 5 - activeStars;
+
+  return `${'★'.repeat(activeStars)}${'☆'.repeat(inactiveStars)}`;
 }
 
 // Manual API smoke test:
@@ -148,12 +161,17 @@ function renderMovieCard(movie) {
   const year = cardElement.querySelector('.movie-card-year');
   const rating = cardElement.querySelector('.movie-card-rating-value');
 
-  image.src = movie.posterUrl || '';
   image.alt = movie.title || 'Movie poster';
+  if (movie.posterUrl) {
+    image.src = movie.posterUrl;
+  } else {
+    image.hidden = true;
+    cardElement.classList.add('is-missing-poster');
+  }
   title.textContent = movie.title || 'Untitled movie';
   genres.textContent = movie.genres || 'Genre unknown';
   year.textContent = movie.year || '';
-  rating.textContent = movie.rating || 'N/A';
+  rating.textContent = getMovieRatingStars(movie.rating);
 
   return cardElement;
 }
