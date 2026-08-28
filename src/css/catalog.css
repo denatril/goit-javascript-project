@@ -34,15 +34,19 @@
 }
 
 .catalog-search-form {
+  width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 80px 44px;
+  grid-template-columns: minmax(0, 1fr) 80px;
+  grid-template-areas:
+    'query year'
+    'submit submit';
   gap: var(--catalog-space-2);
   align-items: center;
-  max-width: 360px;
   margin: 0 auto;
 }
 
 .catalog-search-field {
+  grid-area: query;
   position: relative;
   min-width: 0;
 }
@@ -78,6 +82,7 @@
 }
 
 .catalog-search-year {
+  grid-area: year;
   padding: 0 var(--catalog-space-2);
 }
 
@@ -87,6 +92,8 @@
 }
 
 .catalog-search-submit {
+  grid-area: submit;
+  justify-self: end;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -109,8 +116,8 @@
 
 .catalog-search-submit-icon {
   display: block;
-  width: 35px;
-  height: 25px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
 }
 
@@ -373,7 +380,23 @@
   }
 
   .catalog-search-form {
+    width: auto;
+    grid-template-columns: minmax(0, 1fr) 80px 44px;
+    grid-template-areas: none;
     max-width: 420px;
+  }
+
+  .catalog-search-field {
+    grid-area: auto;
+  }
+
+  .catalog-search-year {
+    grid-area: auto;
+  }
+
+  .catalog-search-submit {
+    grid-area: auto;
+    justify-self: auto;
   }
 }
 
