@@ -45,3 +45,45 @@
     </div>
   </div>
 </div>
+
+<div class="trailer-modal is-hidden" id="trailer-modal" aria-hidden="true">
+  <div class="trailer-modal__overlay" data-trailer-modal-close>
+    <div
+      class="trailer-modal__content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="trailer-modal-title"
+    >
+      <button
+        class="trailer-modal__close"
+        type="button"
+        aria-label="Close trailer"
+        data-trailer-modal-close
+      >
+        &times;
+      </button>
+
+      <h2 class="trailer-modal__title" id="trailer-modal-title">
+        Movie Trailer
+      </h2>
+
+      <div class="trailer-modal__video-wrapper">
+        <iframe
+          class="trailer-modal__video"
+          src=""
+          title="Movie trailer"
+          allow="
+            accelerometer;
+            autoplay;
+            clipboard-write;
+            encrypted-media;
+            gyroscope;
+            picture-in-picture;
+            web-share;
+          "
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</div>

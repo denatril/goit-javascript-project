@@ -1,6 +1,21 @@
+const IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+
 const modal = document.querySelector('#movie-modal');
 const modalOverlay = modal?.querySelector('.modal__overlay');
 const closeButton = modal?.querySelector('.modal__close');
+
+const trailerModal = document.querySelector('#trailer-modal');
+const trailerModalOverlay = trailerModal?.querySelector(
+  '.trailer-modal__overlay'
+);
+const trailerCloseButton = trailerModal?.querySelector(
+  '.trailer-modal__close'
+);
+const trailerVideo = trailerModal?.querySelector(
+  '.trailer-modal__video'
+);
 
 const poster = modal?.querySelector('.modal__poster');
 const title = modal?.querySelector('.modal__title');
@@ -49,8 +64,8 @@ function renderMovie(movie) {
 
   if (poster) {
     poster.src = movie.poster_path
-      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      : '';
+  ? `${IMAGE_BASE_URL}/w500${movie.poster_path}`
+  : '';
     poster.alt = movie.title || 'Movie poster';
   }
 
@@ -99,20 +114,11 @@ function closeModal() {
 }
 
 function handleModalClose(event) {
-  if (!modalOverlay || !event.target) {
+  if (!modalOverlay) {
     return;
   }
 
-  if (
-    event.target === modalOverlay ||
-    event.target.closest('[data-modal-close]')
-  ) {
-    closeModal();
-  }
-}
-
-function handleEscape(event) {
-  if (event.key === 'Escape') {
+  if (event.target === modalOverlay) {
     closeModal();
   }
 }
@@ -146,18 +152,100 @@ function handleLibraryClick() {
   );
 }
 
-function handleOpenMovieModal(event) {
-  renderMovie(event.detail);
-  openModal();
+async function fetchMovieDetails(movieId) {
+  const url = `${API_BASE_URL}/movie/${movieId}?api_key=${apiKey}&language=en-US`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`TMDB movie details request failed: ${response.status}`);
+  }
+
+  return response.json();
 }
 
-modalOverlay?.addEventListener('click', handleModalClose);
-closeButton?.addEventListener('click', closeModal);
-libraryButton?.addEventListener('click', handleLibraryClick);
 
-window.addEventListener('keydown', handleEscape);
+async function handleOpenMovieModal(event) {
+  const movie = event.detail;
+
+  if (!movie) {
+    return;
+  }
+
+  try {
+    openModal();
+
+    const detailedMovie = await fetchMovieDetails(movie.id);
+
+    renderMovie(detailedMovie);
+  } catch (error) {
+    console.error('Failed to load movie details:', error);
+
+    renderMovie(movie);
+  }
+}
 
 window.addEventListener(
   'open-movie-modal',
   handleOpenMovieModal
 );
+
+modalOverlay?.addEventListener('click', handleModalClose);
+closeButton?.addEventListener('click', closeModal);
+libraryButton?.addEventListener('click', handleLibraryClick);
+function handleEscape(event) {
+  if (event.key === 'Escape') {
+    closeModal();
+  }
+}
+
+
+window.addEventListener('keydown', handleEscape);
+
+function openTrailerModal(trailer) {
+  if (!trailerModal || !trailerVideo || !trailer?.key) {
+    return;
+  }
+
+  trailerVideo.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
+
+  trailerModal.classList.remove('is-hidden');
+  trailerModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrailerModal() {
+  if (!trailerModal || !trailerVideo) {
+    return;
+  }
+
+  trailerVideo.src = '';
+  trailerModal.classList.add('is-hidden');
+  trailerModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+trailerModalOverlay?.addEventListener('click', event => {
+  if (
+    event.target === trailerModalOverlay ||
+    event.target.closest('[data-trailer-modal-close]')
+  ) {
+    closeTrailerModal();
+  }
+});
+
+trailerCloseButton?.addEventListener('click', closeTrailerModal);
+
+window.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    closeTrailerModal();
+  }
+});
+
+window.addEventListener(
+  'open-trailer-modal',
+  event => {
+    openTrailerModal(event.detail);
+  }
+);
+

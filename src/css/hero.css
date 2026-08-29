@@ -1,6 +1,6 @@
 .hero {
     position: relative;
-    min-height: 560px;
+    min-height: 680px;
     display: flex;
     align-items: flex-end;
     background-position: center;
@@ -11,7 +11,7 @@
 
 .hero__overlay {
     width: 100%;
-    min-height: 560px;
+    min-height: 680px;
     display: flex;
     align-items: flex-end;
     background: linear-gradient(90deg,
@@ -22,9 +22,16 @@
 
 .hero__container {
     width: 100%;
-    padding-top: 120px;
-    padding-bottom: 70px;
+    padding-top: 80px;
+    padding-bottom: 190px;
 }
+
+@media only screen and (min-width: 1200px) {
+    .hero__container {
+        max-width: 1400px;
+    }
+}
+
 
 .hero__content {
     max-width: 560px;
@@ -32,14 +39,34 @@
 
 .hero__rating {
     margin-bottom: 12px;
-    font-size: 18px;
-    font-weight: 600;
 }
 
-.hero__rating-value {
+.hero__rating-stars {
+    position: relative;
     display: inline-block;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: 3px;
 }
 
+.hero__rating-stars-bg,
+.hero__rating-stars-fill {
+    display: block;
+}
+
+.hero__rating-stars-bg {
+    color: #ff6b08;
+}
+
+.hero__rating-stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    color: #ff6b08;
+    white-space: nowrap;
+}
 .hero__title {
     margin: 0 0 16px;
     font-size: 52px;
@@ -56,16 +83,16 @@
 
 .hero__actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .hero__button {
-    min-width: 140px;
-    min-height: 44px;
-    padding: 10px 22px;
+    min-width: 120px;
+    min-height: 40px;
+    padding: 9px 18px;
     border: 0;
-    border-radius: 8px;
+    border-radius: 20px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -79,14 +106,15 @@
 
 .hero__button--trailer {
     background-color: #ff6b08;
-    color: #ffffff;
-}
-
-.hero__button--details {
-    background-color: #ffffff;
     color: #111111;
 }
 
+.hero__button--details {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+    
 @media screen and (max-width: 767px) {
     .hero {
         min-height: 520px;

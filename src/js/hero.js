@@ -1,10 +1,9 @@
-const API_BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w1280';
-
+const API_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+const IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 const heroElement = document.querySelector('.hero');
 const heroTitle = document.querySelector('.hero__title');
 const heroDescription = document.querySelector('.hero__description');
-const heroRating = document.querySelector('.hero__rating-value');
+const heroRatingStarsFill = document.querySelector('.hero__rating-stars-fill');
 const trailerButton = document.querySelector('.hero__button--trailer');
 const detailsButton = document.querySelector('.hero__button--details');
 
@@ -23,8 +22,7 @@ async function fetchTrendingMovies() {
   }
 
   const url =
-    `${API_BASE_URL}/trending/movie/day` +
-    `?api_key=${apiKey}&language=en-US`;
+    `${API_BASE_URL}/trending/movie/day` + `?api_key=${apiKey}&language=en-US`;
 
   const response = await fetch(url);
 
@@ -42,9 +40,7 @@ function getRandomMovie(movies) {
 
   const availableMovies = movies.filter(movie => {
     return (
-      movie.release_date &&
-      movie.release_date <= today &&
-      movie.backdrop_path
+      movie.release_date && movie.release_date <= today && movie.backdrop_path
     );
   });
 
@@ -52,9 +48,7 @@ function getRandomMovie(movies) {
     return null;
   }
 
-  const randomIndex = Math.floor(
-    Math.random() * availableMovies.length
-  );
+  const randomIndex = Math.floor(Math.random() * availableMovies.length);
 
   return availableMovies[randomIndex];
 }
@@ -67,16 +61,38 @@ function renderHero(movie) {
 
   currentMovie = movie;
 
-  heroElement.style.backgroundImage =
-    `url("${IMAGE_BASE_URL}${movie.backdrop_path}")`;
+  if (heroElement) {
+    if (movie.backdrop_path) {
+      console.log('BACKDROP PATH:', movie.backdrop_path);
+      console.log('IMAGE BASE URL:', IMAGE_BASE_URL);
+      const backdropUrl = `${IMAGE_BASE_URL}/w1280${movie.backdrop_path}`;
 
-  heroTitle.textContent = movie.title || 'Untitled movie';
+      heroElement.style.backgroundImage = `url("${backdropUrl}")`;
+      heroElement.style.backgroundSize = 'cover';
+      heroElement.style.backgroundPosition = 'center';
+      heroElement.style.backgroundRepeat = 'no-repeat';
+    } else {
+      heroElement.style.backgroundImage = '';
+    }
+  }
 
-  heroDescription.textContent =
-    movie.overview || 'No description available.';
+  if (heroTitle) {
+    heroTitle.textContent = movie.title || 'Untitled movie';
+  }
 
-  heroRating.textContent =
-    movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+  if (heroRatingStarsFill) {
+    const rating = Number(movie.vote_average);
+
+    const fillPercentage = Number.isFinite(rating)
+      ? Math.min(Math.max(rating / 10, 0), 1) * 100
+      : 0;
+
+    heroRatingStarsFill.style.width = `${fillPercentage}%`;
+  }
+
+  if (heroDescription) {
+    heroDescription.textContent = movie.overview || 'No description available.';
+  }
 }
 
 function renderFallbackHero() {
@@ -89,7 +105,9 @@ function renderFallbackHero() {
   heroDescription.textContent =
     'Explore trending movies and find something great to watch.';
 
-  heroRating.textContent = 'N/A';
+  if (heroRatingStarsFill) {
+    heroRatingStarsFill.style.width = '0%';
+  }
 }
 
 async function getHeroMovie() {
@@ -121,13 +139,18 @@ async function fetchTrailer(movieId) {
 
   const data = await response.json();
 
-  const trailer = data.results?.find(video => {
-    return (
-      video.site === 'YouTube' &&
-      video.type === 'Trailer' &&
-      video.official === true
-    );
-  });
+  const trailer = data.results
+    ?.filter(video => video.site === 'YouTube' && video.key)
+    .sort((a, b) => {
+      const score = video => {
+        if (video.type === 'Trailer' && video.official === true) return 3;
+        if (video.type === 'Trailer') return 2;
+        if (video.type === 'Teaser') return 1;
+        return 0;
+      };
+
+      return score(b) - score(a);
+    })[0];
 
   return trailer || null;
 }
@@ -157,9 +180,7 @@ async function handleTrailerClick() {
     const trailer = await fetchTrailer(currentMovie.id);
 
     if (!trailer) {
-      window.dispatchEvent(
-        new CustomEvent('trailer-not-found')
-      );
+      window.dispatchEvent(new CustomEvent('trailer-not-found'));
       return;
     }
 
@@ -167,9 +188,7 @@ async function handleTrailerClick() {
   } catch (error) {
     console.error('Failed to load trailer:', error);
 
-    window.dispatchEvent(
-      new CustomEvent('trailer-not-found')
-    );
+    window.dispatchEvent(new CustomEvent('trailer-not-found'));
   }
 }
 
