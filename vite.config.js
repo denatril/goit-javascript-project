@@ -11,6 +11,7 @@ export default defineConfig(({ command }) => {
     },
     envDir: '../',
     root: 'src',
+    envDir: '..',
     build: {
       sourcemap: true,
       rollupOptions: {
