@@ -6,6 +6,8 @@
     --catalog-surface: #282828;
     --catalog-text-primary: #f8f8f8;
     --catalog-text-secondary: #b7b7b7;
+    --catalog-card-text: #f8f8f8;
+    --catalog-card-meta: #b7b7b7;
     --catalog-text-muted: #595959;
     --catalog-accent: #f87719;
     --catalog-accent-hover: #ff8d3a;
@@ -37,4 +39,14 @@
     --catalog-desktop-padding: 48px;
 
     --catalog-transition: 250ms ease;
+}
+
+body.light-theme .catalog-page {
+    --catalog-bg: #ffffff;
+    --catalog-surface: #f2f2f2;
+    --catalog-text-primary: #111111;
+    --catalog-text-secondary: #595959;
+    --catalog-border: rgba(17, 17, 17, 0.5);
+    --catalog-poster-fallback-bg: #e8e8e8;
+    --catalog-loader-track: rgba(17, 17, 17, 0.2);
 }
