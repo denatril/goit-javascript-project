@@ -1,11 +1,64 @@
 <header class="header">
   <div class="container">
     <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-logo" href="./index.html" aria-label="Site logo">
+          <svg class="nav-logo-icon">
+            <use href="img/header-svg-sprite.svg#cinemania-logo"></use>
+          </svg>
+        </a>
+        <a class="nav-logo-text" href="./index.html">Cinemania</a>
+      </div>
+      <div class="nav-right">
+        <ul class="nav-menu">
+          <li class="nav-menu-item">
+            <a href="../index.html">home</a>
+          </li>
+          <li class="nav-menu-item">
+            <a href="../catalog.html">catalog</a>
+          </li>
+          <li class="nav-menu-item">
+            <a href="../library.html">my library</a>
+          </li>
+        </ul>
+        <button class="mobile-menu-btn" type="button" aria-label="Open menu">
+          <p>menu</p>
+        </button>
+        <button class="theme-switch" type="button" aria-label="Toggle theme">
+          <svg class="moon" aria-hidden="true">
+            <use href="img/header-svg-sprite.svg#moon-logo"></use>
+          </svg>
+
+          <svg class="switch" aria-hidden="true">
+            <use href="img/header-svg-sprite.svg#switch-logo"></use>
+          </svg>
+
+          <svg class="sun" aria-hidden="true">
+            <use href="img/header-svg-sprite.svg#sun-logo"></use>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+  <div class="mobile-menu-overlay"></div>
+  <div class="mobile-menu">
+    <div class="mobile-menu-inner">
       <a class="nav-logo" href="./index.html" aria-label="Site logo">
-        <svg class="nav-logo-icon" width="100" height="30">
-          <use href="{=$icon-path}"></use>
+        <svg class="nav-logo-icon">
+          <use href="img/header-svg-sprite.svg#cinemania-logo"></use>
         </svg>
       </a>
-    </nav>
+      <ul class="mobile-menu-list">
+        <li class="mobile-menu-list-item">
+          <a href="../index.html">home</a>
+        </li>
+        <li class="mobile-menu-list-item">
+          <a href="../catalog.html">catalog</a>
+        </li>
+        <li class="mobile-menu-list-item">
+          <a href="../library.html">my library</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </header>
