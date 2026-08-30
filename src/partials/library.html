@@ -1,0 +1,45 @@
+<div class="library-page">
+  <section class="library-content" aria-label="My movie library">
+    <div class="library-container">
+      <div class="library-toolbar">
+        <label class="visually-hidden" for="library-genre">Genre</label>
+
+        <select class="library-genre" id="library-genre" name="genre">
+          <option value="">Genre</option>
+        </select>
+      </div>
+
+      <ul class="library-movie-list"></ul>
+
+      <div class="library-empty" hidden>
+        <p>OOPS...</p>
+        <p>We are very sorry!</p>
+        <p>You don't have any movies at your library.</p>
+      </div>
+
+      <button class="library-load-more" type="button" hidden>Load more</button>
+    </div>
+  </section>
+
+  <button class="scroll-up is-hidden" type="button" aria-label="Scroll to top">
+    <svg class="scroll-up-icon" width="20" height="20">
+      <use href="img/sprite.svg#icon-arrow-up"></use>
+    </svg>
+  </button>
+
+  <template id="library-movie-card-template">
+    <li class="library-movie-card">
+      <img class="library-movie-card-image" src="" alt="" loading="lazy" />
+      <div class="library-movie-card-content">
+        <h2 class="library-movie-card-title"></h2>
+        <p class="library-movie-card-meta">
+          <span class="library-movie-card-genres"></span>
+          <span class="library-movie-card-year"></span>
+        </p>
+        <p class="library-movie-card-rating">
+          <span class="library-movie-card-rating-value"></span>
+        </p>
+      </div>
+    </li>
+  </template>
+</div>

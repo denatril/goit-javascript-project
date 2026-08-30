@@ -1,0 +1,40 @@
+.catalog-page,
+.library-page {
+    --catalog-font-family: "Roboto", sans-serif;
+
+    --catalog-bg: #111111;
+    --catalog-surface: #282828;
+    --catalog-text-primary: #f8f8f8;
+    --catalog-text-secondary: #b7b7b7;
+    --catalog-text-muted: #595959;
+    --catalog-accent: #f87719;
+    --catalog-accent-hover: #ff8d3a;
+    --catalog-search-button-bg: var(--catalog-accent);
+    --catalog-search-button-bg-hover: var(--catalog-accent-hover);
+    --catalog-search-button-border: transparent;
+    --catalog-button-icon: #ffffff;
+    --catalog-scroll-up-icon: #ffffff;
+    --catalog-border: rgba(248, 248, 248, 0.5);
+    --catalog-overlay: rgba(17, 17, 17, 0.7);
+    --catalog-card-overlay: linear-gradient(180deg, rgba(17, 17, 17, 0) 0%, rgba(17, 17, 17, 0.9) 100%);
+    --catalog-poster-fallback-bg: #1f1f1f;
+    --catalog-loader-track: rgba(255, 255, 255, 0.25);
+
+    --catalog-radius-sm: 4px;
+    --catalog-radius-md: 8px;
+
+    --catalog-space-1: 4px;
+    --catalog-space-2: 8px;
+    --catalog-space-3: 12px;
+    --catalog-space-4: 16px;
+    --catalog-space-5: 20px;
+    --catalog-space-6: 24px;
+    --catalog-space-8: 32px;
+    --catalog-space-10: 40px;
+
+    --catalog-mobile-padding: 20px;
+    --catalog-tablet-padding: 32px;
+    --catalog-desktop-padding: 48px;
+
+    --catalog-transition: 250ms ease;
+}
