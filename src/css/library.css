@@ -1,3 +1,7 @@
+html,body{
+    overflow-x: hidden;
+}
+
 .library-page {
   --library-bg: #111111;
   --library-surface: #111111;

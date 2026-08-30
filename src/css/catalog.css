@@ -1,5 +1,9 @@
 @import url('./tokens.css');
 
+html,body{
+    overflow-x: hidden;
+}
+
 .catalog-page {
   min-height: 100vh;
   color: var(--catalog-text-primary);
