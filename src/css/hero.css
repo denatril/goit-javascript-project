@@ -1,0 +1,147 @@
+.hero {
+    position: relative;
+    min-height: 680px;
+    display: flex;
+    align-items: flex-end;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
+
+.hero__overlay {
+    width: 100%;
+    min-height: 680px;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.6) 45%,
+            rgba(0, 0, 0, 0.15) 100%);
+}
+
+.hero__container {
+    width: 100%;
+    padding-top: 80px;
+    padding-bottom: 190px;
+}
+
+@media only screen and (min-width: 1200px) {
+    .hero__container {
+        max-width: 1400px;
+    }
+}
+
+
+.hero__content {
+    max-width: 560px;
+}
+
+.hero__rating {
+    margin-bottom: 12px;
+}
+
+.hero__rating-stars {
+    position: relative;
+    display: inline-block;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: 3px;
+}
+
+.hero__rating-stars-bg,
+.hero__rating-stars-fill {
+    display: block;
+}
+
+.hero__rating-stars-bg {
+    color: #ff6b08;
+}
+
+.hero__rating-stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    color: #ff6b08;
+    white-space: nowrap;
+}
+.hero__title {
+    margin: 0 0 16px;
+    font-size: 52px;
+    line-height: 1.05;
+    font-weight: 700;
+}
+
+.hero__description {
+    margin: 0 0 28px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hero__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hero__button {
+    min-width: 120px;
+    min-height: 40px;
+    padding: 9px 18px;
+    border: 0;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hero__button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.hero__button--trailer {
+    background-color: #ff6b08;
+    color: #111111;
+}
+
+.hero__button--details {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+    
+@media screen and (max-width: 767px) {
+    .hero {
+        min-height: 520px;
+    }
+
+    .hero__overlay {
+        min-height: 520px;
+    }
+
+    .hero__container {
+        padding-top: 100px;
+        padding-bottom: 48px;
+    }
+
+    .hero__content {
+        max-width: 100%;
+    }
+
+    .hero__title {
+        font-size: 36px;
+    }
+
+    .hero__description {
+        font-size: 16px;
+    }
+
+    .hero__button {
+        width: 100%;
+    }
+}
