@@ -3,6 +3,8 @@
   --library-surface: #111111;
   --library-text-primary: #ffffff;
   --library-text-secondary: #b7b7b7;
+  --library-card-text: #ffffff;
+  --library-card-meta: #b7b7b7;
   --library-accent: #f87719;
   --library-accent-hover: #ff8d33;
   --library-border: rgba(248, 248, 248, 0.5);
@@ -30,9 +32,17 @@
   --library-transition: 200ms ease;
 
   min-height: 100vh;
-  background-color: var(--library-bg);
   color: var(--library-text-primary);
   font-family: var(--library-font-family);
+}
+
+body.light-theme .library-page {
+  --library-bg: #ffffff;
+  --library-surface: #f2f2f2;
+  --library-text-primary: #111111;
+  --library-text-secondary: #595959;
+  --library-border: rgba(17, 17, 17, 0.5);
+  --library-poster-fallback-bg: #e8e8e8;
 }
 
 .library-page .visually-hidden {
@@ -104,6 +114,12 @@
   overflow: hidden;
   border-radius: var(--library-radius-md);
   background-color: var(--library-surface);
+  cursor: pointer;
+}
+
+.library-movie-card:focus-visible {
+  outline: 2px solid var(--library-accent);
+  outline-offset: 3px;
 }
 
 .library-movie-card.is-missing-poster {
@@ -160,7 +176,7 @@
 
 .library-movie-card-title {
   margin: 0;
-  color: var(--library-text-primary);
+  color: var(--library-card-text);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.25;
@@ -173,7 +189,7 @@
   flex-wrap: wrap;
   gap: var(--library-space-1);
   margin: 0;
-  color: var(--library-text-secondary);
+  color: var(--library-card-meta);
   font-size: 12px;
   line-height: 1.25;
 }

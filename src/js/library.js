@@ -14,10 +14,18 @@ const libraryState = {
   visibleCount: 9,
 };
 
-const LIBRARY_STORAGE_KEYS = ['libraryMovies', 'myLibrary', 'movies'];
+const LIBRARY_STORAGE_KEYS = [
+  'cinemania-library',
+  'my-library',
+  'libraryMovies',
+  'myLibrary',
+  'movies',
+];
 const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
 function getStoredLibraryMovies() {
+  const storedLibraryMovies = [];
+
   for (const key of LIBRARY_STORAGE_KEYS) {
     const storedMovies = localStorage.getItem(key);
 
@@ -29,14 +37,21 @@ function getStoredLibraryMovies() {
       const parsedMovies = JSON.parse(storedMovies);
 
       if (Array.isArray(parsedMovies)) {
-        return parsedMovies;
+        storedLibraryMovies.push(...parsedMovies);
       }
     } catch (error) {
       console.warn(`Invalid library data in localStorage key: ${key}`);
     }
   }
 
-  return [];
+  return [
+    ...new Map(
+      storedLibraryMovies.map(movie => [
+        movie.id ?? `${movie.title || movie.name}-${movie.release_date || movie.year}`,
+        movie,
+      ])
+    ).values(),
+  ];
 }
 
 function getLibraryMovieYear(movie) {
@@ -79,6 +94,7 @@ function getLibraryMoviePosterUrl(movie) {
 
 function normalizeLibraryMovie(movie) {
   return {
+    ...movie,
     posterUrl: getLibraryMoviePosterUrl(movie),
     title: movie.title || movie.name || 'Untitled movie',
     genres: getLibraryMovieGenres(movie),
@@ -121,6 +137,10 @@ function renderLibraryMovieCard(movie) {
   const year = card.querySelector('.library-movie-card-year');
   const rating = card.querySelector('.library-movie-card-rating-value');
 
+  card.dataset.movieId = movie.id;
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `View details for ${movie.title}`);
   image.alt = movie.title;
   if (movie.posterUrl) {
     image.src = movie.posterUrl;
@@ -145,6 +165,47 @@ function renderLibraryMovieList(movies) {
   libraryRefs.movieList.append(...movieCards);
   setLibraryEmptyState(movies.length === 0);
   setLoadMoreVisibility(movies.length);
+}
+
+function openMovieDetails(movie) {
+  window.dispatchEvent(
+    new CustomEvent('open-movie-modal', {
+      detail: movie,
+    })
+  );
+}
+
+function getMovieFromCard(target) {
+  const card = target.closest('.library-movie-card');
+
+  if (!card) {
+    return null;
+  }
+
+  return libraryState.movies.find(
+    movie => String(movie.id) === card.dataset.movieId
+  );
+}
+
+function handleMovieCardClick(event) {
+  const movie = getMovieFromCard(event.target);
+
+  if (movie) {
+    openMovieDetails(movie);
+  }
+}
+
+function handleMovieCardKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') {
+    return;
+  }
+
+  const movie = getMovieFromCard(event.target);
+
+  if (movie) {
+    event.preventDefault();
+    openMovieDetails(movie);
+  }
 }
 
 function getLibraryGenres(movies) {
@@ -212,7 +273,13 @@ function initLibraryPage() {
 
   libraryState.movies = normalizedMovies;
   libraryState.filteredMovies = normalizedMovies;
+  libraryState.activeGenre = '';
+  libraryState.visibleCount = 9;
 
+  libraryRefs.genreSelect.value = '';
+  libraryRefs.genreSelect
+    .querySelectorAll('option:not(:first-child)')
+    .forEach(option => option.remove());
   populateLibraryGenres(libraryState.movies);
   renderLibraryMovieList(libraryState.filteredMovies);
 }
@@ -220,7 +287,10 @@ function initLibraryPage() {
 libraryRefs.genreSelect.addEventListener('change', filterLibraryMovies);
 libraryRefs.loadMoreButton.addEventListener('click', handleLoadMore);
 libraryRefs.scrollUpButton.addEventListener('click', handleScrollUpClick);
+libraryRefs.movieList.addEventListener('click', handleMovieCardClick);
+libraryRefs.movieList.addEventListener('keydown', handleMovieCardKeydown);
 window.addEventListener('scroll', updateScrollUpVisibility);
+window.addEventListener('library-updated', initLibraryPage);
 
 initLibraryPage();
 updateScrollUpVisibility();

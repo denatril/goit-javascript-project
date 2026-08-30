@@ -2,7 +2,6 @@
 
 .catalog-page {
   min-height: 100vh;
-  background-color: var(--catalog-bg);
   color: var(--catalog-text-primary);
   font-family: var(--catalog-font-family);
 }
@@ -188,6 +187,16 @@
   list-style: none;
 }
 
+.catalog-page .movie-list-item {
+  border-radius: var(--catalog-radius-md);
+  cursor: pointer;
+}
+
+.catalog-page .movie-list-item:focus-visible {
+  outline: 2px solid var(--catalog-accent);
+  outline-offset: 3px;
+}
+
 .catalog-page .movie-card {
   position: relative;
   overflow: hidden;
@@ -248,7 +257,7 @@
 
 .catalog-page .movie-card-title {
   margin: 0;
-  color: var(--catalog-text-primary);
+  color: var(--catalog-card-text);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.25;
@@ -261,7 +270,7 @@
   flex-wrap: wrap;
   gap: var(--catalog-space-1);
   margin: 0;
-  color: var(--catalog-text-secondary);
+  color: var(--catalog-card-meta);
   font-size: 12px;
   line-height: 1.25;
 }

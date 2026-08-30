@@ -98,6 +98,7 @@ function getMovieGenres(genreIds) {
 
 function normalizeMovie(movie) {
   return {
+    ...movie,
     posterUrl: getMoviePosterUrl(movie.poster_path),
     title: movie.title,
     genres: getMovieGenres(movie.genre_ids || []),
@@ -161,6 +162,10 @@ function renderMovieCard(movie) {
   const year = cardElement.querySelector('.movie-card-year');
   const rating = cardElement.querySelector('.movie-card-rating-value');
 
+  cardElement.dataset.movieId = movie.id;
+  cardElement.setAttribute('role', 'button');
+  cardElement.setAttribute('tabindex', '0');
+  cardElement.setAttribute('aria-label', `View details for ${movie.title}`);
   image.alt = movie.title || 'Movie poster';
   if (movie.posterUrl) {
     image.src = movie.posterUrl;
@@ -183,6 +188,47 @@ function renderMovieList(movies) {
 
   catalogRefs.movieList.append(...movieCards);
   setEmptyState(movies.length === 0);
+}
+
+function openMovieDetails(movie) {
+  window.dispatchEvent(
+    new CustomEvent('open-movie-modal', {
+      detail: movie,
+    })
+  );
+}
+
+function getMovieFromCard(target) {
+  const card = target.closest('.movie-list-item');
+
+  if (!card) {
+    return null;
+  }
+
+  return catalogState.movies.find(
+    movie => String(movie.id) === card.dataset.movieId
+  );
+}
+
+function handleMovieCardClick(event) {
+  const movie = getMovieFromCard(event.target);
+
+  if (movie) {
+    openMovieDetails(movie);
+  }
+}
+
+function handleMovieCardKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') {
+    return;
+  }
+
+  const movie = getMovieFromCard(event.target);
+
+  if (movie) {
+    event.preventDefault();
+    openMovieDetails(movie);
+  }
 }
 
 function getPageRange(start, end) {
@@ -385,6 +431,8 @@ catalogRefs.queryInput.addEventListener('input', updateClearButtonVisibility);
 catalogRefs.clearButton.addEventListener('click', handleClearSearch);
 catalogRefs.form.addEventListener('submit', handleSearchSubmit);
 catalogRefs.paginationList.addEventListener('click', handlePaginationClick);
+catalogRefs.movieList.addEventListener('click', handleMovieCardClick);
+catalogRefs.movieList.addEventListener('keydown', handleMovieCardKeydown);
 
 function updateScrollUpVisibility() {
   const shouldShowScrollUp = window.scrollY > 300;
