@@ -56,7 +56,7 @@ async function fetchTmdb(path, params = {}) {
 async function searchMovies({ query, year, page = 1 }) {
   return fetchTmdb('/search/movie', {
     query,
-    year,
+    primary_release_year: year,
     page,
     include_adult: false,
     language: 'en-US',
