@@ -2,11 +2,6 @@
    HOME
 ================================ */
 
-.weekly-trends,
-.upcoming {
-  background-color: #111111;
-}
-
 .weekly-trends .container,
 .upcoming .container {
   min-width: 320px;
@@ -106,12 +101,10 @@
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 55%,
-    rgba(0, 0, 0, 0.8) 80%,
-    #000000 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 55%,
+      rgba(0, 0, 0, 0.8) 80%,
+      #000000 100%);
 
   pointer-events: none;
 }
@@ -172,6 +165,30 @@
   font-size: 14px;
 
   color: #ffffff;
+}
+
+body.light-theme .weekly-trends__title,
+body.light-theme .upcoming__section-title,
+body.light-theme .upcoming__title,
+body.light-theme .upcoming__about-title,
+body.light-theme .weekly-trends__empty,
+body.light-theme .home-error,
+body.light-theme .upcoming__empty {
+  color: #111111;
+}
+
+body.light-theme .weekly-trends__meta,
+body.light-theme .upcoming__label,
+body.light-theme .upcoming__description {
+  color: #595959;
+}
+
+body.light-theme .upcoming__value {
+  color: #111111;
+}
+
+body.light-theme .upcoming__release {
+  color: #f87719;
 }
 
 /* ==============================
@@ -337,6 +354,7 @@
 ================================ */
 
 @media screen and (min-width: 768px) {
+
   .weekly-trends .container,
   .upcoming .container {
     max-width: 768px;
@@ -445,6 +463,7 @@
 ================================ */
 
 @media screen and (min-width: 1280px) {
+
   .weekly-trends .container,
   .upcoming .container {
     max-width: 1280px;
