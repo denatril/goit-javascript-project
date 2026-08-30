@@ -25,6 +25,7 @@ const catalogState = {
 
 const FIRST_MOVIE_YEAR = 1900;
 const CURRENT_YEAR = new Date().getFullYear();
+const MOBILE_PAGINATION_QUERY = window.matchMedia('(max-width: 767px)');
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
@@ -235,6 +236,42 @@ function getPageRange(start, end) {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
+function getVisiblePages(currentPage, totalPages) {
+  if (MOBILE_PAGINATION_QUERY.matches) {
+    if (totalPages <= 5) {
+      return getPageRange(1, totalPages);
+    }
+
+    if (currentPage <= 3) {
+      return [1, 2, 3, totalPages];
+    }
+
+    if (currentPage >= totalPages - 2) {
+      return [1, ...getPageRange(totalPages - 2, totalPages)];
+    }
+
+    return [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
+  }
+
+  if (totalPages <= 10) {
+    return getPageRange(1, totalPages);
+  }
+
+  if (currentPage <= 5) {
+    return [...getPageRange(1, 9), totalPages];
+  }
+
+  if (currentPage >= totalPages - 4) {
+    return [1, ...getPageRange(totalPages - 8, totalPages)];
+  }
+
+  return [
+    1,
+    ...getPageRange(currentPage - 3, currentPage + 3),
+    totalPages,
+  ];
+}
+
 function renderPagination(currentPage, totalPages) {
   clearPagination();
 
@@ -242,23 +279,22 @@ function renderPagination(currentPage, totalPages) {
     return;
   }
 
-  let visiblePages = [];
-
-  if (totalPages <= 10) {
-    visiblePages = getPageRange(1, totalPages);
-  } else if (currentPage <= 5) {
-    visiblePages = [...getPageRange(1, 9), totalPages];
-  } else if (currentPage >= totalPages - 4) {
-    visiblePages = [1, ...getPageRange(totalPages - 8, totalPages)];
-  } else {
-    visiblePages = [
-      1,
-      ...getPageRange(currentPage - 3, currentPage + 3),
-      totalPages,
-    ];
-  }
-
-  const pages = [];
+  const visiblePages = getVisiblePages(currentPage, totalPages);
+  const pages = [
+    `
+      <li>
+        <button
+          class="pagination-control"
+          type="button"
+          data-page="${currentPage - 1}"
+          aria-label="Go to previous page"
+          ${currentPage === 1 ? 'disabled' : ''}
+        >
+          <span aria-hidden="true">&#8249;</span>
+        </button>
+      </li>
+    `,
+  ];
 
   const uniquePages = [...new Set(visiblePages)];
 
@@ -283,11 +319,25 @@ function renderPagination(currentPage, totalPages) {
           aria-label="Go to page ${page}"
           ${isActive ? 'aria-current="page"' : ''}
         >
-          ${page}
+          ${String(page).padStart(2, '0')}
         </button>
       </li>
     `);
   }
+
+  pages.push(`
+    <li>
+      <button
+        class="pagination-control"
+        type="button"
+        data-page="${currentPage + 1}"
+        aria-label="Go to next page"
+        ${currentPage === totalPages ? 'disabled' : ''}
+      >
+        <span aria-hidden="true">&#8250;</span>
+      </button>
+    </li>
+  `);
 
   catalogRefs.paginationList.innerHTML = pages.join('');
   catalogRefs.pagination.hidden = false;
@@ -297,6 +347,12 @@ function updateClearButtonVisibility() {
   const hasQuery = catalogRefs.queryInput.value.trim() !== '';
 
   catalogRefs.clearButton.classList.toggle('is-hidden', !hasQuery);
+}
+
+function handlePaginationViewportChange() {
+  if (catalogState.totalPages > 1) {
+    renderPagination(catalogState.page, catalogState.totalPages);
+  }
 }
 
 async function handleClearSearch() {
@@ -369,7 +425,9 @@ async function handleSearchSubmit(event) {
 }
 
 async function handlePaginationClick(event) {
-  const pageButton = event.target.closest('.pagination-button');
+  const pageButton = event.target.closest(
+    '.pagination-button, .pagination-control'
+  );
 
   if (!pageButton) {
     return;
@@ -433,6 +491,10 @@ catalogRefs.form.addEventListener('submit', handleSearchSubmit);
 catalogRefs.paginationList.addEventListener('click', handlePaginationClick);
 catalogRefs.movieList.addEventListener('click', handleMovieCardClick);
 catalogRefs.movieList.addEventListener('keydown', handleMovieCardKeydown);
+MOBILE_PAGINATION_QUERY.addEventListener(
+  'change',
+  handlePaginationViewportChange
+);
 
 function updateScrollUpVisibility() {
   const shouldShowScrollUp = window.scrollY > 300;
